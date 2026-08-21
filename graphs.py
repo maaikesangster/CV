@@ -15,24 +15,60 @@ fig.show()
 
 fig.write_html('cv.html')
 
-import plotly.express as px
-fig2 = px.scatter_geo(df, locations="iso_alpha", 
-                     #color="Type",
-                     hover_name="country", #size="pop",
-                     projection="natural earth", 
-                     scope='world', 
-                     text='Experience', animation_frame='Start',
-                     )
-fig2.update_traces(textposition='top center')
-fig2.show()
+color_map = {
+    trace.name: trace.marker.color
+    for trace in fig.data
+}
+
+
+
+
+
+fig2 = px.scatter_geo(
+    df,
+    locations="iso_alpha",
+    hover_name="country",
+    projection="natural earth",
+    scope="world",
+    text="Experience",
+    animation_frame="Start",
+    color="Type",
+   color_discrete_map=color_map,
+)
+
+fig2.update_traces(textposition="top center", )
 
 fig2.update_geos(
     lonaxis_range=[-20, 65],
     lataxis_range=[35, 71],
+
     #projection_type="mercator",  # optional projection choice
 )
 
+fig2.update_layout(
+   showlegend=False)
+    # width=1100,
+    # height=650,
+
+#     margin=dict(
+#         l=20,
+#         r=300,   # fixed space for legend
+#         t=30,
+#         b=50
+#     ),
+
+#     legend=dict(
+#         x=0.7,
+#         y=0.95,
+#         xanchor="left",
+#         yanchor="top",
+#         itemsizing="constant"
+#     )
+# )
+
 fig2.write_html('cv_map.html')
+
+
 
 ###
 from pathlib import Path
@@ -64,7 +100,6 @@ combined_html = f"""
 
 body {{
     font-family: Arial, sans-serif;
-    max-width: 1200px;
     margin: 30px auto;
     padding: 0 20px;
 }}
@@ -190,6 +225,8 @@ buttons.forEach(button => {{
 
         button.classList.add("active");
 
+        
+
     }});
 
 }});
@@ -202,10 +239,10 @@ buttons.forEach(button => {{
 """
 
 
-Path("combined.html").write_text(
+Path("index.html").write_text(
     combined_html,
     encoding="utf-8"
 )
 
 
-print("Created combined.html")
+print("Created index.html")
